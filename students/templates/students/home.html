@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Teacher Portal – Students</title>
+  <link rel="stylesheet" href="/static/students/styles.css" />
+  <script defer src="/static/students/main.js"></script>
+</head>
+<body>
+  <!-- Navbar -->
+<nav class="navbar">
+  <div class="navbar-brand">📘 Teacher Portal</div>
+  <div class="navbar-actions">
+    <a href="/home/" class="nav-link">Home</a>
+    <a href="/dashboard/" class="nav-link">Dashboard</a>
+    <a href="/login/" class="logout-btn">Logout</a>
+  </div>
+</nav>
+
+
+  <!-- Content Container -->
+  <div class="container">
+    <!-- Student Table -->
+     <div class="search-container">
+  <input
+    type="text"
+    id="searchInput"
+    placeholder="🔍 Search by name..."
+    onkeyup="filterStudents()"
+  />
+</div>
+
+    <div class="table-wrapper">
+      <table class="student-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Subject</th>
+            <th>Marks</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for student in students %}
+          <tr data-id="{{ student.id }}">
+            <td class="student-name-cell">
+  <div class="avatar">{{ student.name|slice:":1"|upper }}</div>
+  <span class="student-name-text">{{ student.name }}</span>
+</td>
+
+            <td>{{ student.subject }}</td>
+            <td>
+  {{ student.marks }}
+  <span class="badge {% if student.marks >= 90 %}top{% elif student.marks >= 75 %}good{% elif student.marks >= 50 %}average{% else %}poor{% endif %}">
+    {% if student.marks >= 90 %}
+      ⭐ Top Performer
+    {% elif student.marks >= 75 %}
+      👍 Good
+    {% elif student.marks >= 50 %}
+      ⚠️ Average
+    {% else %}
+      ❌ Needs Work
+    {% endif %}
+  </span>
+</td>
+
+            <td>
+  <div class="dropdown">
+    <button class="dropdown-toggle" onclick="toggleDropdown(this)">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" class="dropdown-icon" fill="#fff" viewBox="0 0 24 24">
+        <path d="M7 10l5 5 5-5z" />
+      </svg>
+    </button>
+    <div class="dropdown-menu">
+      <button onclick="showEditModal({{ student.id }}, '{{ student.name }}', '{{ student.subject }}', {{ student.marks }})">✏️ Edit</button>
+      <button onclick="confirmDeleteStudent({{ student.id }})">🗑️ Delete</button>
+    </div>
+  </div>
+</td>
+
+          </tr>
+          {% endfor %}
+          
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Add Student Button -->
+    <div class="add-student-container">
+      <button class="btn add-btn" onclick="showAddModal()">➕ Add Student</button>
+    </div>
+  </div>
+<div class="export-container">
+  <button class="btn export-btn" onclick="exportToCSV()">📁 Export to CSV</button>
+</div>
+  <!-- Add Modal -->
+  <div id="addModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="hideAddModal()">&times;</span>
+      <h2>Add New Student</h2>
+      <input type="text" id="newName" placeholder="Student Name" />
+      <input type="text" id="newSubject" placeholder="Subject" />
+      <input type="number" id="newMarks" placeholder="Marks" />
+      <div class="modal-actions">
+        <button class="btn primary" onclick="addStudent()">✅ Submit</button>
+        <button class="btn secondary" onclick="hideAddModal()">❌ Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="hideEditModal()">&times;</span>
+      <h2>Edit Student</h2>
+      <input type="hidden" id="editId" />
+      <input type="text" id="editName" placeholder="Name" />
+      <input type="text" id="editSubject" placeholder="Subject" />
+      <input type="number" id="editMarks" placeholder="Marks" />
+      <div class="modal-actions">
+        <button class="btn primary" onclick="submitEdit()">💾 Update</button>
+        <button class="btn secondary" onclick="hideEditModal()">❌ Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+  <div id="deleteModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="hideDeleteModal()">&times;</span>
+      <h2>Delete Student?</h2>
+      <p>This will permanently remove the student record.</p>
+      <div class="modal-actions">
+        <button class="btn danger" onclick="deleteStudent()">🗑️ Yes, Delete</button>
+        <button class="btn secondary" onclick="hideDeleteModal()">❌ Cancel</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

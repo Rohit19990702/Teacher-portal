@@ -1,0 +1,49 @@
+<head>
+  <meta charset="UTF-8" />
+  <title>Teacher Portal – Students</title>
+  <link rel="stylesheet" href="/static/students/styles.css" />
+  <script defer src="/static/students/main.js"></script>
+</head>
+<body class="login-page">
+    
+    <div class="login-container">
+<h2 text-color="red">Tailwebs</h2>
+        {% if error %}
+            <div class="login-error">{{ error }}</div>
+        {% endif %}
+
+       <form method="POST">
+  {% csrf_token %}
+<div class="input-wrapper">
+    Username
+  <label for="username">
+    <span class="input-label-icon">
+      <!-- SVG user icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#4e54c8" viewBox="0 0 24 24">
+        <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/>
+      </svg>
+    </span>
+   <input type="text" id="username" name="username" placeholder="Enter your username">
+  </label>
+  
+</div>
+
+<div class="input-wrapper">
+    Password
+  <label for="password">
+    <span class="input-label-icon">
+      <!-- SVG lock icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#4e54c8" viewBox="0 0 24 24">
+        <path d="M17 8h-1V6c0-2.8-2.2-5-5-5S6 3.2 6 6v2H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-5 9c-1.1 0-2-.9-2-2 0-.7.4-1.4 1-1.7V12h2v1.3c.6.3 1 1 1 1.7 0 1.1-.9 2-2 2zm3-9H8V6c0-1.7 1.3-3 3-3s3 1.3 3 3v2z"/>
+      </svg>
+    </span>
+    <input type="password" id="password" name="password" placeholder="Enter your password">
+  </label>
+  
+</div>
+
+  <button type="submit">Login</button>
+</form>
+
+    </div>
+</body>

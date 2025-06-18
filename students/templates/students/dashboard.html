@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>📊 Dashboard | Teacher Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-color: #2e3b4e;
+      --secondary-color: #2e3b4e;
+      --bg-color: #f0f2f8;
+      --card-bg: #ffffff;
+      --text-dark: #333;
+      --accent: #ffc107;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    .navbar {
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      color: #fff;
+      padding: 1.2rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      font-weight: 600;
+    }
+
+    .navbar h1 {
+      font-size: 1.6rem;
+    }
+
+    .navbar a {
+      text-decoration: none;
+      background-color: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: 0.3s ease;
+    }
+
+    .navbar a:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .dashboard-container {
+      max-width: 1080px;
+      margin: 2rem auto;
+      padding: 1rem 2rem;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      color: var(--primary-color);
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+    }
+
+    .summary-cards {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+
+    .card {
+      flex: 1 1 280px;
+      background: linear-gradient(to bottom right, var(--primary-color), var(--secondary-color));
+      color: #fff;
+      padding: 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      font-size: 1.2rem;
+      text-align: center;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: var(--accent);
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+    }
+
+    canvas {
+      background-color: #fff;
+      padding: 1rem;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    @media (max-width: 768px) {
+      .summary-cards {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <h1>📊 Class Dashboard</h1>
+    <a href="/home/">⬅ Back to Students</a>
+  </nav>
+
+  <div class="dashboard-container">
+    <h2>📈 Performance Overview</h2>
+
+    <div class="summary-cards">
+      <div class="card">👩‍🏫 Total Students<br><strong>{{ total_students }}</strong></div>
+      <div class="card">🏅 Top Performers (90+)<br><strong>{{ top_performers }}</strong></div>
+      <div class="card">📉 Low Performers (&lt;40)<br><strong>{{ low_performers }}</strong></div>
+    </div>
+
+    <canvas id="subjectChart" height="130"></canvas>
+  </div>
+
+  <script>
+    const chartData = {{ subject_avg|safe }};
+    const labels = chartData.map(item => item.subject);
+    const data = chartData.map(item => item.avg_marks);
+
+    const ctx = document.getElementById('subjectChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: '📚 Average Marks by Subject',
+          data: data,
+          backgroundColor: 'rgba(78, 84, 200, 0.8)',
+          borderRadius: 10,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: '📚 Subject-wise Average Marks',
+            font: {
+              size: 20,
+              family: 'Inter'
+            },
+            color: '#4e54c8'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: '#666'
+            }
+          },
+          x: {
+            ticks: {
+              color: '#666'
+            }
+          }
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
